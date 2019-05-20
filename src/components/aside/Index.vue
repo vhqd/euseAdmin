@@ -33,17 +33,17 @@
             <template slot="title">后台</template>
             <el-menu-item index="2-1-1">nodeJs</el-menu-item>
           </el-submenu>
-           <el-submenu index="2-4">
+          <el-submenu index="2-4">
             <template slot="title">笔记文章</template>
             <el-menu-item index="2-4-1">文章列表</el-menu-item>
           </el-submenu>
         </el-submenu>
-      <!--   <el-submenu index="3">
+        <!--   <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-document-copy"></i>内容管理
           </template>
           <el-menu-item index="3-1">所有内容</el-menu-item>
-        </el-submenu> -->
+        </el-submenu>-->
         <el-submenu index="4">
           <template slot="title">
             <i class="el-icon-setting"></i>系统管理
@@ -59,7 +59,7 @@
 <script>
 export default {
   data() {
-    return {};
+    return { "default-active": 0 };
   },
   methods: {}
 };
