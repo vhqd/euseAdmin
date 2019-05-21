@@ -14,10 +14,9 @@
           </ul>
           <ul class="bd" id="bd">
             <li style="display: block;">
-              <form name="formLogin" action method="post">
-                <input type="text" class="tex" placeholder="账号" name="mobile_phone">
-                <input type="password" class="tex tex2" placeholder="密码" name="password">
-                <!-- <p style="font-size: 16px;color:#666;">
+              <input type="text" class="tex" placeholder="请输入账号" v-model="username">
+              <input type="password" class="tex tex2" placeholder="请输入密码" v-model="password">
+              <!-- <p style="font-size: 16px;color:#666;">
                   验证码：
                   <input
                     type="text"
@@ -27,18 +26,17 @@
                   >
                   <span class="yzm">DFJ6</span>
                   <span class="changeimg">看不清，换一张</span>
-                </p>-->
-                <div class="forgive">
-                  <label class="l">
-                    <input type="checkbox" class="che" value="1" name="remember" id="remember">
-                    自动登录
-                  </label>
-                  <a href class="a2 r">忘记密码?</a>
-                </div>
-                <div class="clear"></div>
-                <input class="but" type="button" value="登     录">
-                <a class="but register">注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</a>
-              </form>
+              </p>-->
+              <div class="forgive">
+                <label class="l">
+                  <input type="checkbox" class="che" value="1" name="remember" id="remember">
+                  自动登录
+                </label>
+                <a href class="a2 r">忘记密码?</a>
+              </div>
+              <div class="clear"></div>
+              <input class="but" type="button" value="登     录" @click="sendLogin">
+              <a class="but register">注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</a>
               <!-- <p class="p2">
                         <a href="">免费注册</a>丨
                         <a href="">忘记密码</a>
@@ -55,14 +53,58 @@
 </template>
 
 <script>
+import qs from "qs";
+import service from "../../service";
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      username: "",
+      password: ""
+    };
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    sendLogin() {
+      if (this.username == "") {
+        this.$message({
+          type: "info",
+          message: "请输入用户名"
+        });
+        return;
+      }
+      if (this.password == "") {
+        this.$message({
+          type: "info",
+          message: "请输入密码"
+        });
+        return;
+      }
+      let user = {
+        username: this.username,
+        password: this.password
+      };
+      service
+        .login(qs.stringify(user))
+        .then(res => {
+          console.log(res);
+          
+          if (res.data.code == 200) {
+            this.$router.replace("/index");
+            console.log(res);
+          } else if (res.data.code == -1) {
+            this.$message({
+              type: "info",
+              message: res.data.msg
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
