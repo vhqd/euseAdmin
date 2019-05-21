@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
-      <el-menu :default-openeds="['1', '3']">
+      <el-menu :default-active="activeIndex">
         <router-link to="/">
           <el-menu-item index="0">
             <i class="el-icon-s-home"></i>
@@ -12,7 +12,7 @@
           <template slot="title">
             <i class="el-icon-receiving"></i>分类管理
           </template>
-          <router-link to="/category">
+          <router-link :to="{path:'/category',query:{'activeIndex':'1-1'}}">
             <el-menu-item index="1-1">分类列表</el-menu-item>
           </router-link>
         </el-submenu>
@@ -48,7 +48,9 @@
           <template slot="title">
             <i class="el-icon-setting"></i>系统管理
           </template>
-          <el-menu-item index="4-1">用户管理</el-menu-item>
+          <router-link to="users">
+            <el-menu-item index="4-1">用户管理</el-menu-item>
+          </router-link>
           <el-menu-item index="4-2">权限管理</el-menu-item>
         </el-submenu>
       </el-menu>
@@ -59,9 +61,18 @@
 <script>
 export default {
   data() {
-    return { "default-active": 0 };
+    return {
+      activeIndex: "0"
+    };
   },
-  methods: {}
+  methods: {},
+  mounted() {
+    if (this.$route.query && !(JSON.stringify(this.$route.query) == "{}")) {
+      this.activeIndex = this.$route.query.activeIndex;
+    } else {
+      this.activeIndex = "0";
+    }
+  }
 };
 </script>
 

@@ -5,6 +5,7 @@ import Main from '@/components/main'
 import Login from '@/components/Login'
 import Category from '@/components/Category'
 import Articles from '@/components/Articles'
+import Users from '@/components/Users'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
           path:'articles',
           name:'articles',
           component:Articles
+        },
+        {
+          path:'users',
+          name:'users',
+          component:Users
         }
       ]
     },
