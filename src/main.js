@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import VueQuillEditor  from 'vue-quill-editor'
+import Store from './store'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -13,7 +14,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import '../static/css/base.css'
 
 Vue.use(VueQuillEditor);
-Vue.use(ElementUI)
+Vue.use(ElementUI);
 
 Vue.filter( 'getDate' , function(timeStamp,isData) {
   var date = new Date();
@@ -42,6 +43,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  Store,
   components: { App },
   template: '<App/>'
 })

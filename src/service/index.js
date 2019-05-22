@@ -7,6 +7,9 @@ export default {
     adduser:(data)=>{
         return axios.post(baseurl+'/api/user/adduser',data)
     },
+    edituser:(data)=>{
+        return axios.post(baseurl+'/api/user/edituser',data)
+    },
     getusers:()=>{
         return axios.get(baseurl+'/api/user/users')
     },
@@ -15,5 +18,8 @@ export default {
     },
     getcategorys:()=>{
         return axios.get(baseurl+'/api/category/category')
+    },
+    addCategory:(data)=>{
+        return axios.post(baseurl+'/api/category/addcategory',data)
     }
 }

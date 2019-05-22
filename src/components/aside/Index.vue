@@ -20,30 +20,25 @@
           <template slot="title">
             <i class="el-icon-notebook-2"></i>栏目管理
           </template>
-          <router-link to="/articles">
-            <el-menu-item index="2-1">所有文章</el-menu-item>
-          </router-link>
-          <el-submenu index="2-2">
-            <template slot="title">前端</template>
-            <el-menu-item index="2-2-1">JavaScript</el-menu-item>
-            <el-menu-item index="2-2-2">HTML5</el-menu-item>
-            <el-menu-item index="2-2-3">CSS3</el-menu-item>
-          </el-submenu>
-          <el-submenu index="2-3">
-            <template slot="title">后台</template>
-            <el-menu-item index="2-1-1">nodeJs</el-menu-item>
-          </el-submenu>
-          <el-submenu index="2-4">
-            <template slot="title">笔记文章</template>
-            <el-menu-item index="2-4-1">文章列表</el-menu-item>
-          </el-submenu>
+
+          <div v-for="(item,index) in cates" :key="index">
+            <router-link :to='{path:"/articles",query:{"activeIndex":"2-0",id:"allCategroy"}}'>
+              <el-menu-item index="2-0" v-if="!item.children">{{item.categoryname}}</el-menu-item>
+            </router-link>
+          </div>
+
+          <div v-for="(item,index) in cates" :key="'key'+index">
+            <el-submenu :index="index+'-'+(index+1)" v-if="item.children">
+              <template slot="title">{{item.categoryname}}</template>
+              <template v-if="item.children">
+                <router-link  :to="{path:'/articles',query:{'activeIndex':index+'-'+(index+1)+'-'+(index+1),id:secitem._id}}" v-for="(secitem,indexs) in item.children" :key="indexs">
+                  <el-menu-item :index="index+'-'+(index+1)+'-'+(index+1)">{{secitem.categoryname}}</el-menu-item>
+                </router-link>
+              </template>
+            </el-submenu>
+          </div>
+
         </el-submenu>
-        <!--   <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-document-copy"></i>内容管理
-          </template>
-          <el-menu-item index="3-1">所有内容</el-menu-item>
-        </el-submenu>-->
         <el-submenu index="4">
           <template slot="title">
             <i class="el-icon-setting"></i>系统管理
@@ -59,10 +54,15 @@
 </template>
 
 <script>
+import service from "../../service";
+import { sortarr } from "../../untils/base";
+import store from '../../store'
+
 export default {
   data() {
     return {
-      activeIndex: "0"
+      activeIndex: "0",
+      cates: []
     };
   },
   methods: {},
@@ -72,6 +72,28 @@ export default {
     } else {
       this.activeIndex = "0";
     }
+    service
+      .getcategorys()
+      .then(res => {
+        let categorys = res.data.data.category;
+        let firstCate = [],
+          secCate = [];
+        categorys.forEach((v, k) => {
+          if (v.isparent) {
+            v.children = eval("(" + v.children + ")");
+            firstCate.push(v);
+          } else {
+            secCate.push(v);
+          }
+        });
+        this.cates = sortarr(firstCate);
+        store.commit("firstCategory",firstCate)
+        store.commit("setSecCategory",secCate)
+        console.log(sortarr(firstCate));
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>

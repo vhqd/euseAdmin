@@ -13,6 +13,7 @@ export default {
             currentPage: 1,
             input: "",
             isreset: true,
+            addoredit:true,
             page: {
                 pagesizes: [12, 35, 50, 100],
                 pagesize: 12,
@@ -34,7 +35,7 @@ export default {
                     { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
                 ],
                 password: [
-                    { required: true, message: "请输入用户密码", trigger: "blur" },
+                    { required: true, message: "请输入密码", trigger: "blur" },
                     { min: 3, max: 18, message: "长度在 3 到 18 个字符", trigger: "blur" }
                 ]
             },
@@ -61,16 +62,19 @@ export default {
         handleEdit(index, row, handle) {
             this.addEditTitle(handle);
             this.dialogFormVisible = true;
+            row.password = '';
             this.user = row;
             console.log(index, row);
         },
         addEditTitle(handle) {
             if (handle == "add") {
+                this.addoredit = true;
                 this.resetForm();
                 this.isreset = true;
                 this.categorytitle = "添加用户";
                 this.categoryBut = "立即创建";
             } else if (handle == "edit") {
+                this.addoredit = false;
                 this.categorytitle = "编辑用户";
                 this.categoryBut = "修改用户";
                 this.isreset = false;
@@ -188,20 +192,43 @@ export default {
                         password: this.user.password,
                         isadmin: this.user.isadmin
                     }
-                    service.adduser(user).then((res) => {
-                        if (res.data.code == 200) {
-                            this.$message({
-                                type: "success",
-                                message: "用户添加成功"
-                            });
-                            this.dialogFormVisible = false
-                            this.getusers();
-                        } else {
-                            this.$message.error('添加用户失败');
-                        }
-                    }).catch((err) => {
-                        console.log(err);
-                    })
+                    if(this.addoredit){//添加用户
+                        service.adduser(user).then((res) => {
+                            if (res.data.code == 200) {
+                                this.$message({
+                                    type: "success",
+                                    message: "用户添加成功"
+                                });
+                                this.dialogFormVisible = false
+                                this.getusers();
+                            } else {
+                                this.$message.error('添加用户失败');
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }else{//编辑用户
+                        this.user.username = user.username;
+                        this.user.password = user.password;
+                        this.user.isadmin = user.isadmin
+                        console.log(this.user);
+                        
+                        service.edituser(qs.stringify(this.user)).then((res) => {
+                            if (res.data.code == 200) {
+                                this.$message({
+                                    type: "success",
+                                    message: "用户编辑成功"
+                                });
+                                this.dialogFormVisible = false
+                                this.getusers();
+                            } else {
+                                this.$message.error('添加编辑失败');
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
+                    
                 } else {
                     console.log("error submit!!");
                     return false;

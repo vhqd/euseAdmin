@@ -24,3 +24,23 @@ export const getDate = (timeStamp, isData) => {
         return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     }
 }
+
+
+
+export function sortarr(arr){
+    for(let i=0;i<arr.length-1;i++){
+        for(let j=0;j<arr.length-1-i;j++){
+            /**
+             * 比较第j位和j+1的sort值
+             * 如果j位的sort值比j+1位的sort值大，那么他们的位置发生交换
+             * 如果j位的sort值比j+1位的sort值小，那么位置不变
+             */
+            if(arr[j].sort > arr[j+1].sort){
+                var temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+    return arr;
+}

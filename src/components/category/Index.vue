@@ -51,11 +51,9 @@
         <el-form-item label="是否一级" prop="isparent">
           <el-switch v-model="ruleForm.isparent"></el-switch>
         </el-form-item>
-        <el-form-item label="父级分类" prop="region" v-if="!ruleForm.parent">
-          <el-select v-model="ruleForm.region" placeholder="请选择父级">
-            <el-option label="前端" value="qianduan"></el-option>
-            <el-option label="后台" value="houtai"></el-option>
-            <el-option label="笔记" value="biji"></el-option>
+        <el-form-item label="父级分类" prop="parentId" v-if="!ruleForm.isparent">
+          <el-select v-if="firstCate" v-model="ruleForm.parentId" placeholder="请选择父级">
+            <el-option :label="item.categoryname" :value="item._id" v-for="(item,index) in firstCate" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="分类描述" prop="desc">

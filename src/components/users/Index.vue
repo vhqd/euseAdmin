@@ -28,7 +28,6 @@
           <el-button
             size="mini"
             @click="handleEdit(scope.$index, scope.row,'edit')"
-            :disabled="scope.row.isadmin"
           >编辑</el-button>
           <el-button
             size="mini"
@@ -45,7 +44,7 @@
         <el-form-item label="用户名" prop="username">
           <el-input v-model="user.username"></el-input>
         </el-form-item>
-        <el-form-item label="用名密码" prop="password">
+        <el-form-item label="用名新密码" prop="password">
           <el-input v-model="user.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="是否管理员" prop="isadmin">

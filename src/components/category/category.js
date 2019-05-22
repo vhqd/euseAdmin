@@ -1,6 +1,7 @@
 import euNavi from "@/components/navi";
 import service from '../../service'
 import { getDate } from '../../untils/base.js'
+import store from "../../store";
 
 export default {
   components: {
@@ -20,17 +21,17 @@ export default {
       },
       formInline: {
         user: "",
-        region: ""
+        parentId: ""
       },
       dialogFormVisible: false,
       ruleForm: {
-        name: "",
-        region: "",
-        parent: true,
+        categoryname: '',
+        isparent: false,
+        parentId: "",
         desc: ""
       },
       rules: {
-        name: [
+        categoryname: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
         ]
@@ -47,6 +48,9 @@ export default {
           this.currentPage * this.page.pagesize
         ) || []
       );
+    },
+    firstCate() {
+      return store.getters.getFirstCategory.slice(1, store.getters.getFirstCategory.length)
     }
   },
   watch: {},
@@ -144,8 +148,12 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.ruleForm);
+          service.addCategory(this.ruleForm).then((res) => {
+            console.log(res.data);
+          }).catch((err) => {
+            console.log(err);
 
-          alert("submit!");
+          })
         } else {
           console.log("error submit!!");
           return false;
@@ -155,9 +163,9 @@ export default {
     resetForm() {
       /* this.$refs[formName].resetFields(); */
       this.ruleForm = {
-        name: "",
-        region: "",
-        parent: true,
+        categoryname: "",
+        parentId: "",
+        isparent: false,
         desc: ""
       };
     }
