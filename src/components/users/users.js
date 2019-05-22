@@ -13,7 +13,7 @@ export default {
             currentPage: 1,
             input: "",
             isreset: true,
-            addoredit:true,
+            addoredit: true,
             page: {
                 pagesizes: [12, 35, 50, 100],
                 pagesize: 12,
@@ -118,14 +118,14 @@ export default {
         deletOpen(index, batch) {
             let users = this.multipleSelection;
             let checkAdmin = false
-            users.forEach((v,k) => {
-                if(v.username == 'admin'){
+            users.forEach((v, k) => {
+                if (v.username == 'admin') {
                     this.$message.error('不允许删除管理员账号');
                     checkAdmin = true;
                     return;
                 }
             });
-            if(checkAdmin){
+            if (checkAdmin) {
                 return;
             }
             this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
@@ -192,7 +192,7 @@ export default {
                         password: this.user.password,
                         isadmin: this.user.isadmin
                     }
-                    if(this.addoredit){//添加用户
+                    if (this.addoredit) {//添加用户
                         service.adduser(user).then((res) => {
                             if (res.data.code == 200) {
                                 this.$message({
@@ -207,12 +207,12 @@ export default {
                         }).catch((err) => {
                             console.log(err);
                         })
-                    }else{//编辑用户
+                    } else {//编辑用户
                         this.user.username = user.username;
                         this.user.password = user.password;
                         this.user.isadmin = user.isadmin
                         console.log(this.user);
-                        
+
                         service.edituser(qs.stringify(this.user)).then((res) => {
                             if (res.data.code == 200) {
                                 this.$message({
@@ -228,7 +228,7 @@ export default {
                             console.log(err);
                         })
                     }
-                    
+
                 } else {
                     console.log("error submit!!");
                     return false;

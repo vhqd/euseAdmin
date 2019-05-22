@@ -9,7 +9,7 @@
           <el-dropdown-item>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span>王小虎</span>
+      <span>欢迎张大哥</span>
     </el-header>
   </div>
 </template>

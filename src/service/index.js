@@ -21,5 +21,8 @@ export default {
     },
     addCategory:(data)=>{
         return axios.post(baseurl+'/api/category/addcategory',data)
+    },
+    deletecategory:(data)=>{
+        return axios.post(baseurl+'/api/category/deletecategory',data)
     }
 }

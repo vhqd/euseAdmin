@@ -4,7 +4,7 @@
  * @param {blooena} isData 
  */
 export const getDate = (timeStamp, isData) => {
-    var d = new Date(parseInt(timeStamp));
+    var d = new Date(timeStamp);
     var date = new Date();
     date.setTime(d.getTime());
     var y = date.getFullYear();
