@@ -48,7 +48,7 @@
           <template slot="title">
             <i class="el-icon-setting"></i>系统管理
           </template>
-          <router-link to="users">
+          <router-link :to="{path:'/users',query:{'activeIndex':'4-1'}}">
             <el-menu-item index="4-1">用户管理</el-menu-item>
           </router-link>
           <el-menu-item index="4-2">权限管理</el-menu-item>

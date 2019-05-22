@@ -1,6 +1,12 @@
-export const getDate =  (timeStamp,isData) =>{
+/**
+ * 
+ * @param {时间戳} timeStamp 
+ * @param {blooena} isData 
+ */
+export const getDate = (timeStamp, isData) => {
+    var d = new Date(parseInt(timeStamp));
     var date = new Date();
-    date.setTime(timeStamp);
+    date.setTime(d.getTime());
     var y = date.getFullYear();
     var m = date.getMonth() + 1;
     m = m < 10 ? ('0' + m) : m;
@@ -12,9 +18,9 @@ export const getDate =  (timeStamp,isData) =>{
     var second = date.getSeconds();
     minute = minute < 10 ? ('0' + minute) : minute;
     second = second < 10 ? ('0' + second) : second;
-    if (isData){
+    if (isData) {
         return y + '-' + m + '-' + d;
-    } else{
-        return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+    } else {
+        return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     }
 }
