@@ -3,7 +3,7 @@
     <eu-navi></eu-navi>
     <el-row class="handbt">
       <el-button type="success" @click="addEdit('add')">添加文章</el-button>
-      <el-button type="danger" @click="deletList(true)">删除分类</el-button>
+      <el-button type="danger" @click="deletList(true)">批量删除</el-button>
     </el-row>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="搜索">

@@ -2,6 +2,7 @@ import euNavi from "@/components/navi";
 import service from '../../service'
 import { getDate } from '../../untils/base.js'
 import store from "../../store";
+import qs from 'qs'
 
 export default {
   components: {
@@ -14,6 +15,7 @@ export default {
       currentPage: 1,
       input: "",
       isreset: true,
+      addoredit: true,
       page: {
         pagesizes: [12, 25, 50, 100],
         pagesize: 12,
@@ -68,6 +70,7 @@ export default {
     addEditTitle(handle) {
       if (handle == "add") {
         this.resetForm();
+        this.addoredit = true;
         this.isreset = true;
         this.categorytitle = "添加分类";
         this.categoryBut = "立即创建";
@@ -75,6 +78,7 @@ export default {
         this.categorytitle = "编辑分类";
         this.categoryBut = "修改编辑";
         this.isreset = false;
+        this.addoredit = false;
       }
     },
     formatter(row, column) {
@@ -168,18 +172,33 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.ruleForm);
-          service.addCategory(this.ruleForm).then((res) => {
-            this.dialogFormVisible = false;
-            this.getcategorys();
-            this.$message({
-              type: "success",
-              message: "添加成功!"
-            });
-            console.log(res.data);
-          }).catch((err) => {
-            console.log(err);
+          if (this.addoredit) {//添加栏目
+            service.addCategory(this.ruleForm).then((res) => {
+              this.dialogFormVisible = false;
+              this.getcategorys();
+              this.$message({
+                type: "success",
+                message: "添加成功!"
+              });
+              console.log(res.data);
+            }).catch((err) => {
+              console.log(err);
+            })
+          } else {//编辑栏目
+              console.log('编辑栏目');
+              service.editcategory(this.ruleForm).then((res) => {
+                this.dialogFormVisible = false;
+                this.getcategorys();
+                this.$message({
+                  type: "success",
+                  message: "添加成功!"
+                });
+                console.log(res.data);
+              }).catch((err) => {
+                console.log(err);
+              })
+          }
 
-          })
         } else {
           console.log("error submit!!");
           return false;
