@@ -10,7 +10,7 @@ export default {
   },
   data() {
     return {
-      categorytitle: "添加分类",
+      categorytitle: "添加栏目",
       categoryBut: "立即创建",
       currentPage: 1,
       input: "",
@@ -34,8 +34,8 @@ export default {
       },
       rules: {
         categoryname: [
-          { required: true, message: "请输入分类名称", trigger: "blur" },
-          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
+          { required: true, message: "请输入栏目名称", trigger: "blur" },
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
         ]
       },
       multipleSelection: [],
@@ -50,6 +50,9 @@ export default {
           this.currentPage * this.page.pagesize
         ) || []
       );
+    },
+    allCate(){
+      return store.getters.getAllCategory
     },
     firstCate() {
       return store.getters.getFirstCategory.slice(1, store.getters.getFirstCategory.length)
@@ -72,10 +75,10 @@ export default {
         this.resetForm();
         this.addoredit = true;
         this.isreset = true;
-        this.categorytitle = "添加分类";
+        this.categorytitle = "添加栏目";
         this.categoryBut = "立即创建";
       } else if (handle == "edit") {
-        this.categorytitle = "编辑分类";
+        this.categorytitle = "编辑栏目";
         this.categoryBut = "修改编辑";
         this.isreset = false;
         this.addoredit = false;
@@ -158,6 +161,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
+          this.$message.error('失败',err);
         });
 
     },
@@ -183,6 +187,7 @@ export default {
               console.log(res.data);
             }).catch((err) => {
               console.log(err);
+              this.$message.error('失败',err);
             })
           } else {//编辑栏目
               console.log('编辑栏目');
@@ -201,6 +206,7 @@ export default {
 
         } else {
           console.log("error submit!!");
+          this.$message.error('失败',err);
           return false;
         }
       });

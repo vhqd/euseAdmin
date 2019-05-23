@@ -26,6 +26,7 @@
       <el-table-column prop="desc" label="文字描述"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-button size="mini" type="success">预览</el-button>
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>
           <el-button
             size="mini"
@@ -44,34 +45,38 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="文章名称" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="文章名称" prop="title">
+          <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="选择栏目" prop="parent">
-          <el-cascader :options="options" change-on-select></el-cascader>
+        <el-form-item label="选择栏目" prop="parentId" v-if="!ruleForm.isparent">
+          <el-select v-if="secCate" v-model="ruleForm.parentId" placeholder="请选择栏目">
+            <el-option :label="item.categoryname" :value="item._id" v-for="(item,index) in secCate" :key="index"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="文章内容："></el-form-item>
-        <el-upload
-          class="avatar-uploader"
-          :action="serverUrl"
-          name="img"
-          :headers="header"
-          :show-file-list="false"
-          :on-success="uploadSuccess"
-          :on-error="uploadError"
-          :before-upload="beforeUpload"
-        ></el-upload>
-        <quill-editor
-          ref="myQuillEditor"
-          :content="content"
-          :options="editorOption"
-          @change="onEditorChange($event)"
-          style="width:93%;margin-left:7%;"
-        ></quill-editor>
-        <el-form-item></el-form-item>
+        <el-form-item label="文章简介" prop="desc">
+          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+        <el-form-item label="文章内容：">
+          <quill-editor
+            ref="myQuillEditor"
+            :content="ruleForm.content"
+            :options="editorOption"
+            @change="onEditorChange($event)"
+          ></quill-editor>
+          <el-upload
+            class="avatar-uploader"
+            :action="serverUrl"
+            name="img"
+            :headers="header"
+            :show-file-list="false"
+            :on-success="uploadSuccess"
+            :on-error="uploadError"
+            :before-upload="beforeUpload"
+          ></el-upload>
+        </el-form-item>
         <el-form-item>
-          <el-button type="primary">新建文章</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="addArticle">{{categorytitle}}</el-button>
+          <el-button @click="resetForm('user')" v-if="isreset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

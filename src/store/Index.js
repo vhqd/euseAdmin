@@ -5,10 +5,14 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
+        allCategory:[],
         firstCategory:[],
         secCategory: []
     },
     mutations: {
+        setAllCategory(state,payload){
+            state.allCategory = payload
+        },
         setSecCategory(state,payload){
             state.secCategory = payload
         },
@@ -17,6 +21,9 @@ const store = new Vuex.Store({
         }
     },
     getters: {
+        getAllCategory(state){
+            return state.allCategory
+        },
         getSecCategory(state){
             return state.secCategory
         },

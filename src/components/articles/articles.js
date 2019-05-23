@@ -2,6 +2,7 @@ import euNavi from "@/components/navi";
 import { quillEditor } from "vue-quill-editor";
 import { getDate } from "@/untils/base.js";
 import service from '../../service'
+import store from '../../store'
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -51,11 +52,13 @@ export default {
       },
       ruleForm: {
         name: "",
-        parent: ""
+        parentId: "",
+        desc: "",
+        content:""
       },
       rules: {
         name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" },
+          { required: true, message: "请输入文章名称", trigger: "blur" },
           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
         ]
       },
@@ -65,8 +68,8 @@ export default {
       input: "",
       isreset: true,
       page: {
-        pagesizes: [2, 20, 50, 100],
-        pagesize: 2,
+        pagesizes: [12, 20, 50, 100],
+        pagesize: 12,
         pagetotal: 100
       },
       formInline: {
@@ -74,70 +77,17 @@ export default {
         region: ""
       },
       dialogFormVisible: false,
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则"
-            },
-            {
-              value: "daohang",
-              label: "导航"
-            }
-          ]
-        },
-        {
-          value: "zujian",
-          label: "组件",
-          children: [
-            {
-              value: "basic",
-              label: "Basic"
-            },
-
-            {
-              value: "notice",
-              label: "Notice"
-            },
-            {
-              value: "navigation",
-              label: "Navigation"
-            },
-            {
-              value: "others",
-              label: "Others"
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
       multipleSelection: [],
       articles: []
     };
   },
-  computed: {},
-  watch:{
-    $route(to,from){
+  computed: {
+    secCate() {
+      return store.getters.getSecCategory
+    }
+  },
+  watch: {
+    $route(to, from) {
       this.findcategory()
     }
   },
@@ -145,7 +95,22 @@ export default {
     beforeUpload() {
       // 显示loading动画
     },
+    addArticle() {
+      console.log(this.ruleForm);
+      service.addarticle(this.ruleForm).then((res)=>{
+        console.log(res);
+        this.findcategory();
+        this.$message({
+          type: "success",
+          message: "添加成功"
+      });
+        this.dialogFormVisible = false
+      }).catch((err)=>{
+        this.$message.error('失败',err);
+        console.log(err);
+      })
 
+    },
     uploadSuccess(res, file) {
       // res为图片服务器返回的数据
       // 获取富文本组件实例
@@ -172,11 +137,12 @@ export default {
     onEditorChange({ editor, html, text }) {
       //富文本编辑器  文本改变时 设置字段值
       this.content = html;
+      this.ruleForm.content = html;
       console.log(this.content);
     },
     addEdit(handle) {
       this.dialogFormVisible = true;
-      //this.addEditTitle(handle);
+      this.addEditTitle(handle);
     },
     handleEdit(index, row, handle) {
       this.addEditTitle(handle);
@@ -191,10 +157,18 @@ export default {
         this.categorytitle = "添加文章";
         this.categoryBut = "立即创建";
       } else if (handle == "edit") {
-        this.categorytitle = "编辑分类";
+        this.categorytitle = "编辑文章";
         this.categoryBut = "修改编辑";
         this.isreset = false;
       }
+    },
+    resetForm() {
+      this.ruleForm = {
+        title: "",
+        parentId: "",
+        desc: "",
+        content:""
+      };
     },
     formatter(row, column) {
       return row.address;
@@ -204,6 +178,7 @@ export default {
     },
     handleSizeChange(val) {
       this.page.pagesize = val;
+      this.findcategory();
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
@@ -282,7 +257,7 @@ export default {
           this.page.pagetotal = res.data.page.totalPage
         }).catch((err) => {
           console.log(err);
-
+          this.$message.error('失败',err);
         })
       }
     }

@@ -171,6 +171,7 @@ export default {
                 })
                 .catch(err => {
                     console.log(err);
+                    this.$message.error('失败',err);
                 });
 
         },
@@ -206,6 +207,7 @@ export default {
                             }
                         }).catch((err) => {
                             console.log(err);
+                            this.$message.error('失败',err);
                         })
                     } else {//编辑用户
                         this.user.username = user.username;
@@ -226,11 +228,13 @@ export default {
                             }
                         }).catch((err) => {
                             console.log(err);
+                            this.$message.error('失败',err);
                         })
                     }
 
                 } else {
                     console.log("error submit!!");
+                    this.$message.error('失败',err);
                     return false;
                 }
             });
@@ -254,6 +258,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    this.$message.error('失败',err);
                     console.log(err);
                 });
         },
