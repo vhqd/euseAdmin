@@ -1,5 +1,7 @@
 import euNavi from "@/components/navi";
 import { quillEditor } from "vue-quill-editor";
+import { getDate } from "@/untils/base.js";
+import service from '../../service'
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -35,7 +37,7 @@ export default {
           toolbar: {
             container: toolbarOptions,
             handlers: {
-              image: function(value) {
+              image: function (value) {
                 if (value) {
                   // 触发input框选择图片文件
                   document.querySelector(".avatar-uploader input").click();
@@ -63,9 +65,9 @@ export default {
       input: "",
       isreset: true,
       page: {
-        pagesizes: [10, 20, 50, 100],
-        pagesize: 10,
-        pagetotal: 400
+        pagesizes: [2, 20, 50, 100],
+        pagesize: 2,
+        pagetotal: 100
       },
       formInline: {
         user: "",
@@ -130,69 +132,15 @@ export default {
         }
       ],
       multipleSelection: [],
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "父级",
-          parent: true,
-          parents: "无",
-          desc: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "子集",
-          parent: false,
-          parents: `{
-            date: "2016-05-02",
-            name: "父级",
-            parent: true,
-            desc: "上海市普陀区金沙江路 1518 弄"
-          }`,
-          desc: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-02",
-          name: "父级",
-          parent: true,
-          parents: "无",
-          desc: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "子集",
-          parent: false,
-          parents: `{
-            date: "2016-05-02",
-            name: "父级",
-            parent: true,
-            desc: "上海市普陀区金沙江路 1518 弄"
-          }`,
-          desc: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-02",
-          name: "父级",
-          parent: true,
-          parents: "无",
-          desc: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "子集",
-          parent: false,
-          parents: `{
-            date: "2016-05-02",
-            name: "父级",
-            parent: true,
-            desc: "上海市普陀区金沙江路 1518 弄"
-          }`,
-          desc: "上海市普陀区金沙江路 1518 弄"
-        }
-      ]
+      articles: []
     };
   },
   computed: {},
-  watch: {},
+  watch:{
+    $route(to,from){
+      this.findcategory()
+    }
+  },
   methods: {
     beforeUpload() {
       // 显示loading动画
@@ -255,9 +203,12 @@ export default {
       console.log("submit!");
     },
     handleSizeChange(val) {
+      this.page.pagesize = val;
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val;
+      this.findcategory();
       console.log(`当前页: ${val}`);
     },
     handleDelete(index, row, batch) {
@@ -312,19 +263,44 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
       console.log(this.multipleSelection);
+    },
+    findcategory() {
+      let _id = this.$route.query.id;
+      if (_id) {
+        let data = {
+          "_id": _id,
+          "currentPage": this.currentPage,
+          "pageSize": this.page.pagesize
+        }
+        service.getarticles(data).then((res) => {
+          console.log(res.data);
+          let datas = res.data.data.articles;
+          datas.map((v, k) => {
+            datas[k].creatat = getDate(v.creatat, false);
+          });
+          this.articles = datas;
+          this.page.pagetotal = res.data.page.totalPage
+        }).catch((err) => {
+          console.log(err);
+
+        })
+      }
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    /* this.page.pagetotal = this.tableData.length */
+    /* this.page.pagetotal = this.articles.length */
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  mounted() {
+    this.findcategory()
+
+  },
+  beforeCreate() { }, //生命周期 - 创建之前
+  beforeMount() { }, //生命周期 - 挂载之前
+  beforeUpdate() { }, //生命周期 - 更新之前
+  updated() { }, //生命周期 - 更新之后
+  beforeDestroy() { }, //生命周期 - 销毁之前
+  destroyed() { }, //生命周期 - 销毁完成
+  activated() { } //如果页面有keep-alive缓存功能，这个函数会触发
 };

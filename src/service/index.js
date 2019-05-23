@@ -27,5 +27,8 @@ export default {
     },
     editcategory:(data)=>{
         return axios.post(baseurl+'/api/category/editcategory',data)
+    },
+    getarticles:(data)=>{
+        return axios.post(baseurl+'/api/article/articles',data)
     }
 }

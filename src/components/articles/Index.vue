@@ -14,17 +14,16 @@
       </el-form-item>
     </el-form>
     <el-table
-      :data="tableData"
+      :data="articles"
       style="width: 100%"
       ref="multipleTable"
       :default-sort="{prop: 'date', order: 'descending'}"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="date" label="日期" sortable width="180"></el-table-column>
-      <el-table-column prop="name" label="分类名称" sortable width="180"></el-table-column>
-      <el-table-column prop="parents" label="父级分类"></el-table-column>
-      <el-table-column prop="desc" label="分类描述"></el-table-column>
+      <el-table-column prop="creatat" label="日期" sortable width="180"></el-table-column>
+      <el-table-column prop="title" label="文章标题" sortable width="180"></el-table-column>
+      <el-table-column prop="desc" label="文字描述"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>

@@ -31,8 +31,8 @@
             <el-submenu :index="index+'-'+(index+1)" v-if="item.children">
               <template slot="title">{{item.categoryname}}</template>
               <template v-if="item.children">
-                <router-link  :to="{path:'/articles',query:{'activeIndex':index+'-'+(index+1)+'-'+(index+1),id:secitem._id}}" v-for="(secitem,indexs) in item.children" :key="indexs">
-                  <el-menu-item :index="index+'-'+(index+1)+'-'+(index+1)">{{secitem.categoryname}}</el-menu-item>
+                <router-link  :to="{path:'/articles',query:{'activeIndex':index+'-'+(index+1)+'-'+(indexs+1),id:secitem._id}}" v-for="(secitem,indexs) in item.children" :key="indexs">
+                  <el-menu-item :index="index+'-'+(index+1)+'-'+(indexs+1)">{{secitem.categoryname}}</el-menu-item>
                 </router-link>
               </template>
             </el-submenu>
@@ -76,6 +76,8 @@ export default {
       .getcategorys()
       .then(res => {
         let categorys = res.data.data.category;
+        console.log('categorys',categorys);
+        
         let firstCate = [],
           secCate = [];
         categorys.forEach((v, k) => {
