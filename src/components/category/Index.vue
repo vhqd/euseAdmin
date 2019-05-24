@@ -1,5 +1,5 @@
 <template>
-  <div class="category">
+  <div class="category" v-loading="loading">
     <eu-navi></eu-navi>
     <el-row class="handbt">
       <el-button type="success" @click="addEdit('add')">添加栏目</el-button>
@@ -23,6 +23,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="creatat" label="日期" sortable width="180"></el-table-column>
       <el-table-column prop="categoryname" label="栏目名称" sortable width="180"></el-table-column>
+       <el-table-column prop="parent[0].categoryname" label="父级栏目" width="180"></el-table-column>
       <!-- <el-table-column prop="parents.categoryname" label="父级分类"></el-table-column> -->
       <el-table-column prop="desc" label="栏目描述"></el-table-column>
       <el-table-column label="操作">

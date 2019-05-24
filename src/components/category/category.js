@@ -10,6 +10,7 @@ export default {
   },
   data() {
     return {
+      loading:true,
       categorytitle: "添加栏目",
       categoryBut: "立即创建",
       currentPage: 1,
@@ -156,7 +157,7 @@ export default {
           }
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message:  res.data.msg
           });
         })
         .catch(err => {
@@ -182,7 +183,7 @@ export default {
               this.getcategorys();
               this.$message({
                 type: "success",
-                message: "添加成功!"
+                message:  res.data.msg
               });
               console.log(res.data);
             }).catch((err) => {
@@ -196,7 +197,7 @@ export default {
                 this.getcategorys();
                 this.$message({
                   type: "success",
-                  message: "添加成功!"
+                  message:  res.data.msg
                 });
                 console.log(res.data);
               }).catch((err) => {
@@ -212,6 +213,7 @@ export default {
       });
     },
     getcategorys() {
+      this.loading = true;
       service.getcategorys().then((res) => {
         let datas = res.data.data.category;
         datas.map((v, k) => {
@@ -222,6 +224,7 @@ export default {
         });
         this.categorys = datas;
         this.page.pagetotal = datas.length
+        this.loading = false
       }).catch((err) => {
         console.log(err);
       })

@@ -1,9 +1,9 @@
 <template>
-  <div class="category">
+  <div class="category" v-loading="loading">
     <eu-navi></eu-navi>
     <el-row class="handbt">
       <el-button type="success" @click="addEdit('add')">添加文章</el-button>
-      <el-button type="danger" @click="deletList(true)">批量删除</el-button>
+      <el-button type="danger" @click="deletList(0,true)">批量删除</el-button>
     </el-row>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="搜索">
@@ -50,7 +50,12 @@
         </el-form-item>
         <el-form-item label="选择栏目" prop="parentId" v-if="!ruleForm.isparent">
           <el-select v-if="secCate" v-model="ruleForm.parentId" placeholder="请选择栏目">
-            <el-option :label="item.categoryname" :value="item._id" v-for="(item,index) in secCate" :key="index"></el-option>
+            <el-option
+              :label="item.categoryname"
+              :value="item._id"
+              v-for="(item,index) in secCate"
+              :key="index"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="文章简介" prop="desc">

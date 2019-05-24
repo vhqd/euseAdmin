@@ -55,6 +55,8 @@
 <script>
 import qs from "qs";
 import service from "../../service";
+import store from '../../store'
+
 export default {
   components: {},
   data() {
@@ -89,9 +91,12 @@ export default {
         .login(qs.stringify(user))
         .then(res => {
           console.log(res);
-          
           if (res.data.code == 200) {
-            this.$router.replace("/index");
+            store.commit('setToken',res.data.token)
+            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('user',JSON.stringify(res.data.user))
+            store.commit('setUser',res.data.user)
+            this.$router.replace("/");
             console.log(res);
           } else if (res.data.code == -1) {
             this.$message({

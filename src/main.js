@@ -4,8 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
-import VueQuillEditor  from 'vue-quill-editor'
+import VueQuillEditor from 'vue-quill-editor'
 import Store from './store'
+import axios from 'axios'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -15,8 +16,35 @@ import '../static/css/base.css'
 
 Vue.use(VueQuillEditor);
 Vue.use(ElementUI);
+axios.defaults.headers.common['Authorization'] = Store.state.token;
 
-Vue.filter( 'getDate' , function(timeStamp,isData) {
+axios.interceptors.request.use(
+  config => {
+    if (Store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+      config.headers.Authorization = `Bearer ${Store.state.token}`;
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  });
+
+
+router.beforeEach((to, from, next) => {
+  let token = localStorage.getItem('token');//获取浏览器缓存的用户信息
+
+  if (token) { //如果有就直接到首页咯
+    next();
+  } else {
+    if (to.path == '/login') { //如果是登录页面路径，就直接next()
+      next();
+    } else { //不然就跳转到登录；
+      next('/login');
+    }
+  }
+})
+
+  Vue.filter('getDate', function (timeStamp, isData) {
   var date = new Date();
   date.setTime(timeStamp * 1000);
   var y = date.getFullYear();
@@ -30,10 +58,10 @@ Vue.filter( 'getDate' , function(timeStamp,isData) {
   var second = date.getSeconds();
   minute = minute < 10 ? ('0' + minute) : minute;
   second = second < 10 ? ('0' + second) : second;
-  if (isData){
-      return y + '-' + m + '-' + d;
-  } else{
-      return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+  if (isData) {
+    return y + '-' + m + '-' + d;
+  } else {
+    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
   }
 });
 

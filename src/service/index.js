@@ -31,6 +31,12 @@ export default {
     addarticle:(data)=>{
         return axios.post(baseurl+'/api/article/addarticle',data)
     },
+    editarticle:(data)=>{
+        return axios.post(baseurl+'/api/article/editarticle',data)
+    },
+    deletearticle:(data)=>{
+        return axios.post(baseurl+'/api/article/deletearticle',data)
+    },
     getarticles:(data)=>{
         return axios.post(baseurl+'/api/article/articles',data)
     }

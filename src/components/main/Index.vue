@@ -20,13 +20,9 @@ export default {
   },
   created() {
     let vue = this;
-
     let date = new DateTime();
-
     vue.dateTime.currentDate = date.getDate();
-
     vue.dateTime.currentTime = date.getTime();
-
     vue.dateTime.currentWeek = date.getWeek();
   }
 };

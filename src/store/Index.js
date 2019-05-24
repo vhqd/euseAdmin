@@ -7,9 +7,17 @@ const store = new Vuex.Store({
     state: {
         allCategory:[],
         firstCategory:[],
-        secCategory: []
+        secCategory: [],
+        user:localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
+        token:localStorage.getItem('token') ? localStorage.getItem('token') : null
     },
     mutations: {
+        setUser(state,payload){
+            state.user = payload
+        },
+        setToken(state,payload){
+            state.token = payload
+        },
         setAllCategory(state,payload){
             state.allCategory = payload
         },
@@ -21,6 +29,12 @@ const store = new Vuex.Store({
         }
     },
     getters: {
+        getUser(state){
+            return state.user
+        },
+        getToken(state){
+            return state.token
+        },
         getAllCategory(state){
             return state.allCategory
         },

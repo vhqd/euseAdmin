@@ -9,17 +9,24 @@
           <el-dropdown-item>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span>欢迎张大哥</span>
+      <span>欢迎{{usernmae}}</span>
     </el-header>
   </div>
 </template>
 
 <script>
+import store from "../../store";
+
 export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {},
+  computed: {
+    usernmae() {
+      return store.getters.getUser.username;
+    }
+  }
 };
 </script>
 
@@ -28,6 +35,6 @@ export default {
   background-color: #fff;
   color: #333;
   line-height: 60px;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.08);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
 }
 </style>

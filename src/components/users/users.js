@@ -198,7 +198,7 @@ export default {
                             if (res.data.code == 200) {
                                 this.$message({
                                     type: "success",
-                                    message: "用户添加成功"
+                                    message:  res.data.msg
                                 });
                                 this.dialogFormVisible = false
                                 this.getusers();
@@ -219,7 +219,7 @@ export default {
                             if (res.data.code == 200) {
                                 this.$message({
                                     type: "success",
-                                    message: "用户编辑成功"
+                                    message:  res.data.msg
                                 });
                                 this.dialogFormVisible = false
                                 this.getusers();

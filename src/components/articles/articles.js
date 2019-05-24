@@ -3,6 +3,7 @@ import { quillEditor } from "vue-quill-editor";
 import { getDate } from "@/untils/base.js";
 import service from '../../service'
 import store from '../../store'
+import qs from 'qs'
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -26,6 +27,7 @@ export default {
   },
   data() {
     return {
+      loading:true,
       content: "",
       serverUrl: "/manager/common/imgUpload", // 这里写你要上传的图片服务器地址
       header: {
@@ -54,7 +56,7 @@ export default {
         name: "",
         parentId: "",
         desc: "",
-        content:""
+        content: ""
       },
       rules: {
         name: [
@@ -97,18 +99,34 @@ export default {
     },
     addArticle() {
       console.log(this.ruleForm);
-      service.addarticle(this.ruleForm).then((res)=>{
-        console.log(res);
-        this.findcategory();
-        this.$message({
-          type: "success",
-          message: "添加成功"
-      });
-        this.dialogFormVisible = false
-      }).catch((err)=>{
-        this.$message.error('失败',err);
-        console.log(err);
-      })
+      if (this.isreset) {//添加文章
+        service.addarticle(this.ruleForm).then((res) => {
+          console.log(res);
+          this.findcategory();
+          this.$message({
+            type: "success",
+            message:  res.data.msg
+          });
+          this.dialogFormVisible = false
+        }).catch((err) => {
+          this.$message.error('失败', err);
+          console.log(err);
+        })
+      } else {//编辑文章
+        service.editarticle(qs.stringify(this.ruleForm)).then((res) => {
+          console.log(res);
+          this.findcategory();
+          this.$message({
+            type: "success",
+            message: res.data.msg
+          });
+          this.dialogFormVisible = false
+        }).catch((err) => {
+          this.$message.error('失败', err);
+          console.log(err);
+        })
+      }
+
 
     },
     uploadSuccess(res, file) {
@@ -167,7 +185,7 @@ export default {
         title: "",
         parentId: "",
         desc: "",
-        content:""
+        content: ""
       };
     },
     formatter(row, column) {
@@ -191,9 +209,9 @@ export default {
       this.multipleSelection.push(row);
       /* this.$refs.multipleTable.toggleRowSelection(row); */
       console.log(this.multipleSelection);
-      this.deletList(batch);
+      this.deletList(index, batch);
     },
-    deletList(batch) {
+    deletList(index, batch) {
       if (batch) {
         if (this.multipleSelection == 0) {
           this.$message({
@@ -201,26 +219,29 @@ export default {
             message: "请选择需要删除的数据"
           });
         } else {
-          this.deletOpen(batch);
+          this.deletOpen(index, batch);
         }
       } else {
-        this.deletOpen(batch);
+        this.deletOpen(index, batch);
       }
     },
-    deletOpen(batch) {
+    deletOpen(index, batch) {
       this.$confirm("此操作将永久删除该栏目, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          if (!batch) {
-            this.clearBatch();
-          }
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
+            service.deletearticle(this.multipleSelection).then((res) => {
+              this.findcategory();
+              this.$message({
+                type: "success",
+                message:  res.data.msg
+              });
+            }).catch((err) => {
+              console.log(err);
+              this.$message.error('错误' + err)
+            })
         })
         .catch(() => {
           if (!batch) {
@@ -247,17 +268,19 @@ export default {
           "currentPage": this.currentPage,
           "pageSize": this.page.pagesize
         }
+        this.loading = true;
         service.getarticles(data).then((res) => {
           console.log(res.data);
           let datas = res.data.data.articles;
           datas.map((v, k) => {
             datas[k].creatat = getDate(v.creatat, false);
           });
+          this.loading = false;
           this.articles = datas;
           this.page.pagetotal = res.data.page.totalPage
         }).catch((err) => {
           console.log(err);
-          this.$message.error('失败',err);
+          this.$message.error('失败', err);
         })
       }
     }
