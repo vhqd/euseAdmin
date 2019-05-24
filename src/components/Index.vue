@@ -53,6 +53,7 @@ export default {
   position: fixed;
   left: 0;
   top: 60px;
+  padding-bottom: 60px;
   background: #fff;
 }
 .eu-el-main {

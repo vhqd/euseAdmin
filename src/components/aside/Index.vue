@@ -39,13 +39,13 @@
               </template>
             </el-submenu>
           </div>
-        </el-submenu> -->
+        </el-submenu>-->
 
         <!-- 所有文章 -->
         <div v-for="(item,index) in cates" :key="index">
           <router-link
             v-if="!item.children"
-            :to="{path:'/articles',query:{'activeIndex':'20-0',id:'allCategroy'}}"
+            :to="{path:'/articles',query:{'activeIndex':'0-0',id:'allCategroy'}}"
           >
             <el-menu-item index="0-0">
               <i class="el-icon-notebook-2"></i>
@@ -62,16 +62,16 @@
               <span>{{item.categoryname}}</span>
             </template>
             <div v-for="(secitem,indexs) in item.children" :key="indexs">
-              <el-submenu :index="index+'-'+(index+1)+'-'+(indexs+1)">
+              <el-submenu :index="index+'-'+(index)+'-'+(indexs+1)">
                 <template slot="title">{{secitem.categoryname}}</template>
 
                 <div v-for="(thirditem,thirdindex) in secitem.children" :key="thirdindex">
-                   <router-link
+                  <router-link
                     v-if="!thirditem.children"
-                    :to="{path:'/articles',query:{'activeIndex':index+'-'+(indexs+1)+'-'+(thirdindex+1),id:secitem._id}}"
+                    :to="{path:'/articles',query:{'activeIndex':index+'-'+indexs+'-'+thirdindex,id:secitem._id}}"
                   >
                     <el-menu-item
-                      :index="index+'-'+(indexs+1)+'-'+(thirdindex+1)"
+                      :index="index+'-'+indexs+'-'+thirdindex"
                     >{{thirditem.categoryname}}</el-menu-item>
                   </router-link>
                 </div>
@@ -117,7 +117,41 @@ export default {
       cates: []
     };
   },
-  methods: {},
+  watch: {
+    $route(to) {
+      console.log(to);
+      if (to.path == "/category") {
+        let tabs = ["栏目管理"];
+        store.commit("setTabs", tabs);
+        localStorage.setItem("tabs",JSON.stringify(tabs));
+      } else if (to.path == "/articles") {
+        this.getTabs(store.getters.getFirstCategory);
+      } else if (to.path == "/users") {
+        let tabs = ["用户管理"];
+        store.commit("setTabs", tabs);
+        localStorage.setItem("tabs", JSON.stringify(tabs));
+      }
+    }
+  },
+  methods: {
+    getTabs(firstCate) {
+      let navi = this.$route.query.activeIndex.split("-");
+      let tabs = [];
+      console.log(navi.length);
+
+      if (navi.length == 2) {
+        tabs.push(firstCate[0].categoryname);
+      } else {
+        tabs.push(firstCate[navi[0]].categoryname);
+        tabs.push(firstCate[navi[0]].children[navi[1]].categoryname);
+        tabs.push(
+          firstCate[navi[0]].children[navi[1]].children[navi[2]].categoryname
+        );
+      }
+      store.commit("setTabs", tabs);
+      localStorage.setItem("tabs", JSON.stringify(tabs));
+    }
+  },
   mounted() {
     if (this.$route.query && !(JSON.stringify(this.$route.query) == "{}")) {
       this.activeIndex = this.$route.query.activeIndex;
@@ -146,12 +180,16 @@ export default {
             secCate.push(v);
           }
         });
-
         this.cates = sortarr(firstCate);
         store.commit("setAllCategory", categorys);
         store.commit("firstCategory", firstCate);
         store.commit("setSecCategory", secCate);
         console.log(sortarr(firstCate));
+        console.log("==================================");
+        console.log(firstCate);
+        /*  activeTab.forEach(v => {
+          tabs.push(v.categoryname)
+        }); */
       })
       .catch(err => {
         console.log(err);

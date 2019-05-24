@@ -2,22 +2,24 @@
   <div class="navi">
     <el-breadcrumb separator="/" style="padding:10px;">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>
-        <a href="/">活动管理</a>
-      </el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(item,index) in tabs" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
 
 <script>
+import store from '../../store'
+
 export default {
   components: {},
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    tabs(){
+      return store.getters.getTabs
+    }
+  },
   watch: {},
   methods: {},
   //生命周期 - 创建完成（可以访问当前this实例）
