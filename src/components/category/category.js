@@ -178,6 +178,17 @@ export default {
         if (valid) {
           console.log(this.ruleForm);
           if (this.addoredit) {//添加栏目
+            if(this.ruleForm.isparent){
+              this.ruleForm.level = 1;
+            }else{
+              let parentid = this.ruleForm.parentId;
+              for(let i = 0 ; i < this.allCate.length; i++){
+                if(parentid == this.allCate[i]._id){
+                  this.ruleForm.level = this.allCate[i].level + 1;
+                  break;
+                }
+              }
+            }
             service.addCategory(this.ruleForm).then((res) => {
               this.dialogFormVisible = false;
               this.getcategorys();

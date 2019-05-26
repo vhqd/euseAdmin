@@ -185,8 +185,8 @@ export default {
         store.commit("firstCategory", firstCate);
         store.commit("setSecCategory", secCate);
         console.log(sortarr(firstCate));
-        console.log("==================================");
-        console.log(firstCate);
+        console.log("===========ssssd=======================");
+        console.log(secCate);
         /*  activeTab.forEach(v => {
           tabs.push(v.categoryname)
         }); */
