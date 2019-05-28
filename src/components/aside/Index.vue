@@ -68,7 +68,7 @@
                 <div v-for="(thirditem,thirdindex) in secitem.children" :key="thirdindex">
                   <router-link
                     v-if="!thirditem.children"
-                    :to="{path:'/articles',query:{'activeIndex':index+'-'+indexs+'-'+thirdindex,id:secitem._id}}"
+                    :to="{path:'/articles',query:{'activeIndex':index+'-'+indexs+'-'+thirdindex,id:thirditem._id,pid:secitem._id}}"
                   >
                     <el-menu-item
                       :index="index+'-'+indexs+'-'+thirdindex"
