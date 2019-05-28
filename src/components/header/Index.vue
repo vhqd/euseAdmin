@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-header style="text-align: right; font-size: 12px;">
+      <img src="../../../static/images/logo.png" alt="" style="float:left;height:45px;padding-top:5px;">
       <el-dropdown>
         <i class="el-icon-setting" style="margin-right: 15px"></i>
         <el-dropdown-menu slot="dropdown">
