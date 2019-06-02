@@ -39,5 +39,8 @@ export default {
     },
     getarticles:(data)=>{
         return axios.post(baseurl+'/api/article/articles',data)
+    },
+    getcateall:()=>{
+        return axios.get(baseurl+'/api/category/getcateall')
     }
 }

@@ -44,8 +44,8 @@
         <!-- 所有文章 -->
         <div v-for="(item,index) in cates" :key="index">
           <router-link
-            v-if="!item.children"
-            :to="{path:'/articles',query:{'activeIndex':'0-0',id:'allCategroy'}}"
+            v-if="item.children.length == 0"
+            :to="{path:'/articles',query:{'activeIndex':index+'-'+(index+1),id:'allCategroy'}}"
           >
             <el-menu-item index="0-0">
               <i class="el-icon-notebook-2"></i>
@@ -56,6 +56,7 @@
 
         <!-- 栏目分类 -->
         <div v-for="(item,index) in cates" :key="'key'+index">
+        <div v-if="item.children.length != 0">
           <el-submenu :index="index+'-'+(index+1)" v-if="item.children">
             <template slot="title">
               <i class="el-icon-notebook-2"></i>
@@ -78,6 +79,7 @@
               </el-submenu>
             </div>
           </el-submenu>
+        </div>
         </div>
 
         <!-- <el-submenu index="8">
@@ -123,7 +125,7 @@ export default {
       if (to.path == "/category") {
         let tabs = ["栏目管理"];
         store.commit("setTabs", tabs);
-        localStorage.setItem("tabs",JSON.stringify(tabs));
+        localStorage.setItem("tabs", JSON.stringify(tabs));
       } else if (to.path == "/articles") {
         this.getTabs(store.getters.getFirstCategory);
       } else if (to.path == "/users") {
@@ -159,6 +161,21 @@ export default {
       this.activeIndex = "0";
     }
     service
+      .getcateall()
+      .then(res => {
+        console.log(1111111111111);
+        console.log(res);
+        let categorys = res.data.data.category;
+        this.cates = sortarr(categorys);
+        store.commit("setAllCategory", categorys);
+        /* store.commit("firstCategory", firstCate);
+        store.commit("setSecCategory", secCate); */
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    /*   service
       .getcategorys()
       .then(res => {
         let categorys = res.data.data.category;
@@ -166,7 +183,7 @@ export default {
         let firstCate = [],
           secCate = [];
         categorys.forEach((v, k) => {
-          v.children = eval("(" + v.children + ")");
+          //v.children = eval("(" + v.children + ")");
           if (v.children) {
             v.children.forEach((nv, nk) => {
               if (nv.children) {
@@ -187,13 +204,10 @@ export default {
         console.log(sortarr(firstCate));
         console.log("===========ssssd=======================");
         console.log(secCate);
-        /*  activeTab.forEach(v => {
-          tabs.push(v.categoryname)
-        }); */
       })
       .catch(err => {
         console.log(err);
-      });
+      }); */
   }
 };
 </script>
