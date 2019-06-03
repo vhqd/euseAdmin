@@ -16,30 +16,6 @@
             <el-menu-item index="1-1">栏目列表</el-menu-item>
           </router-link>
         </el-submenu>
-        <!-- <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-notebook-2"></i>文章管理
-          </template>
-          <div v-for="(item,index) in cates" :key="index">
-            <router-link :to="{path:'/articles',query:{'activeIndex':'2-0',id:'allCategroy'}}">
-              <el-menu-item index="2-0" v-if="!item.children">{{item.categoryname}}</el-menu-item>
-            </router-link>
-          </div>
-          <div v-for="(item,index) in cates" :key="'key'+index">
-            <el-submenu :index="index+'-'+(index+1)" v-if="item.children">
-              <template slot="title">{{item.categoryname}}</template>
-              <template v-if="item.children">
-                <router-link
-                  :to="{path:'/articles',query:{'activeIndex':index+'-'+(index+1)+'-'+(indexs+1),id:secitem._id}}"
-                  v-for="(secitem,indexs) in item.children"
-                  :key="indexs"
-                >
-                  <el-menu-item :index="index+'-'+(index+1)+'-'+(indexs+1)">{{secitem.categoryname}}</el-menu-item>
-                </router-link>
-              </template>
-            </el-submenu>
-          </div>
-        </el-submenu>-->
 
         <!-- 所有文章 -->
         <div v-for="(item,index) in cates" :key="index">
@@ -82,17 +58,6 @@
         </div>
         </div>
 
-        <!-- <el-submenu index="8">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
-          </template>
-          <el-submenu index="8-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="8-4-1">选项1</el-menu-item>
-          </el-submenu>
-        </el-submenu>-->
-
         <el-submenu index="99">
           <template slot="title">
             <i class="el-icon-setting"></i>系统管理
@@ -127,7 +92,7 @@ export default {
         store.commit("setTabs", tabs);
         localStorage.setItem("tabs", JSON.stringify(tabs));
       } else if (to.path == "/articles") {
-        this.getTabs(store.getters.getFirstCategory);
+        this.getTabs(store.getters.getAllCategory);
       } else if (to.path == "/users") {
         let tabs = ["用户管理"];
         store.commit("setTabs", tabs);
@@ -136,18 +101,18 @@ export default {
     }
   },
   methods: {
-    getTabs(firstCate) {
+    getTabs(allCate) {
       let navi = this.$route.query.activeIndex.split("-");
       let tabs = [];
       console.log(navi.length);
 
       if (navi.length == 2) {
-        tabs.push(firstCate[0].categoryname);
+        tabs.push(allCate[0].categoryname);
       } else {
-        tabs.push(firstCate[navi[0]].categoryname);
-        tabs.push(firstCate[navi[0]].children[navi[1]].categoryname);
+        tabs.push(allCate[navi[0]].categoryname);
+        tabs.push(allCate[navi[0]].children[navi[1]].categoryname);
         tabs.push(
-          firstCate[navi[0]].children[navi[1]].children[navi[2]].categoryname
+          allCate[navi[0]].children[navi[1]].children[navi[2]].categoryname
         );
       }
       store.commit("setTabs", tabs);
@@ -175,39 +140,6 @@ export default {
         console.log(err);
       });
 
-    /*   service
-      .getcategorys()
-      .then(res => {
-        let categorys = res.data.data.category;
-        console.log("categorys", categorys);
-        let firstCate = [],
-          secCate = [];
-        categorys.forEach((v, k) => {
-          //v.children = eval("(" + v.children + ")");
-          if (v.children) {
-            v.children.forEach((nv, nk) => {
-              if (nv.children) {
-                nv.children = eval("(" + nv.children + ")");
-              }
-            });
-          }
-          if (v.isparent) {
-            firstCate.push(v);
-          } else {
-            secCate.push(v);
-          }
-        });
-        this.cates = sortarr(firstCate);
-        store.commit("setAllCategory", categorys);
-        store.commit("firstCategory", firstCate);
-        store.commit("setSecCategory", secCate);
-        console.log(sortarr(firstCate));
-        console.log("===========ssssd=======================");
-        console.log(secCate);
-      })
-      .catch(err => {
-        console.log(err);
-      }); */
   }
 };
 </script>
