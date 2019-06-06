@@ -16,6 +16,7 @@ export default {
       currentPage: 1,
       valuelen: [],
       input: "",
+      fileList:[],
       isreset: true,
       addoredit: true,
       allCate: [],
@@ -67,6 +68,13 @@ export default {
       this.ruleForm.parentId = value[value.length - 1]
       this.valuelen = value
       console.log(value);
+    },
+    handleSuccess(res, file, fileList){
+      this.ruleForm.imgurl = res.ret_code
+      this.fileList = fileList;
+      console.log(res);
+      console.log(file);
+      console.log(fileList);
     },
     addEdit(handle) {
       this.dialogFormVisible = true;
@@ -216,6 +224,8 @@ export default {
                 type: "success",
                 message: res.data.msg
               });
+              this.ruleForm.imgurl = '';
+              this.fileList = [];
               console.log(res.data);
             }).catch((err) => {
               console.log(err);
@@ -230,6 +240,8 @@ export default {
                 type: "success",
                 message: res.data.msg
               });
+              this.ruleForm.imgurl = '';
+              this.fileList = [];
               console.log(res.data);
             }).catch((err) => {
               console.log(err);

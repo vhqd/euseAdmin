@@ -23,6 +23,11 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="creatat" label="日期" sortable width="180"></el-table-column>
       <el-table-column prop="categoryname" label="栏目名称" sortable width="180"></el-table-column>
+      <el-table-column prop="imgurl" label="缩略图" min-width="20%">
+        <template slot-scope="scope">
+          <img :src="scope.row.imgurl" min-width="70" height="70">
+        </template>
+      </el-table-column>
       <el-table-column prop="parent[0].categoryname" label="父级栏目" width="180"></el-table-column>
       <!-- <el-table-column prop="parents.categoryname" label="父级分类"></el-table-column> -->
       <el-table-column prop="desc" label="栏目描述"></el-table-column>
@@ -51,6 +56,22 @@
         </el-form-item>
         <el-form-item label="是否一级" prop="isparent">
           <el-switch v-model="ruleForm.isparent"></el-switch>
+        </el-form-item>
+        <el-form-item label="选择图片">
+          <el-upload
+            multiple
+            class="upload-demo"
+            action="http://127.0.0.1:3000/api/upload/addPicture"
+            :on-success="handleSuccess"
+            :limit="1"
+            ref="upload"
+            name="img"
+            :file-list="fileList"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+          </el-upload>
         </el-form-item>
         <!--  <el-form-item label="父级栏目" prop="parentId" v-if="!ruleForm.isparent">
           <el-select v-if="allCate" v-model="ruleForm.parentId" placeholder="请选择父级">
