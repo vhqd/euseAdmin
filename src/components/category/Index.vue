@@ -23,7 +23,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="creatat" label="日期" sortable width="180"></el-table-column>
       <el-table-column prop="categoryname" label="栏目名称" sortable width="180"></el-table-column>
-       <el-table-column prop="parent[0].categoryname" label="父级栏目" width="180"></el-table-column>
+      <el-table-column prop="parent[0].categoryname" label="父级栏目" width="180"></el-table-column>
       <!-- <el-table-column prop="parents.categoryname" label="父级分类"></el-table-column> -->
       <el-table-column prop="desc" label="栏目描述"></el-table-column>
       <el-table-column label="操作">
@@ -52,10 +52,18 @@
         <el-form-item label="是否一级" prop="isparent">
           <el-switch v-model="ruleForm.isparent"></el-switch>
         </el-form-item>
-        <el-form-item label="父级栏目" prop="parentId" v-if="!ruleForm.isparent">
+        <!--  <el-form-item label="父级栏目" prop="parentId" v-if="!ruleForm.isparent">
           <el-select v-if="allCate" v-model="ruleForm.parentId" placeholder="请选择父级">
-            <el-option :label="item.categoryname" :value="item._id" v-for="(item,index) in allCate" :key="index"></el-option>
+            <el-option
+              :label="item.categoryname"
+              :value="item._id"
+              v-for="(item,index) in allCate"
+              :key="index"
+            ></el-option>
           </el-select>
+        </el-form-item>-->
+        <el-form-item label="父级栏目" prop="parentId">
+          <el-cascader :options="allCate" change-on-select clearable @change="handlecateID"></el-cascader>
         </el-form-item>
         <el-form-item label="栏目描述" prop="desc">
           <el-input type="textarea" v-model="ruleForm.desc"></el-input>

@@ -67,6 +67,7 @@
           <el-cascader
             v-model="value"
             :options="allcate"
+            clearable
             :props="{expandTrigger:'hover'}"
             @change="handlecateID"
           ></el-cascader>

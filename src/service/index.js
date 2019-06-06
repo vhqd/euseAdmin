@@ -42,5 +42,8 @@ export default {
     },
     getcateall:()=>{
         return axios.get(baseurl+'/api/category/getcateall')
+    },
+    getonetowcate:()=>{
+        return axios.get(baseurl+'/api/category/getleveltwo')
     }
 }
