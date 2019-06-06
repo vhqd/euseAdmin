@@ -27,7 +27,8 @@ export default {
   },
   data() {
     return {
-      loading:true,
+      value: [],
+      loading: true,
       content: "",
       serverUrl: "/manager/common/imgUpload", // 这里写你要上传的图片服务器地址
       header: {
@@ -80,12 +81,17 @@ export default {
       },
       dialogFormVisible: false,
       multipleSelection: [],
-      articles: []
+      articles: [],
+      fileList: [],
+      imgurl:{}
     };
   },
   computed: {
     secCate() {
       return store.getters.getSecCategory
+    },
+    allcate(){
+      return store.getters.getAllCate
     }
   },
   watch: {
@@ -94,25 +100,59 @@ export default {
     }
   },
   methods: {
+    handlecateID(value) {
+      this.ruleForm.parentId = value[value.length-1]
+      console.log(value);
+    },
+    handleSuccess(res, file, fileList){
+      this.imgurl = res.ret_code;
+      this.fileList = fileList;
+      console.log(res);
+      console.log(file);
+      console.log(fileList);
+    },
+    handleChange(file, fileList) {
+      console.log(fileList);
+      
+     //this.fileList = fileList.slice(-3);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
     beforeUpload() {
       // 显示loading动画
     },
     addArticle() {
       console.log(this.ruleForm);
       if (this.isreset) {//添加文章
+        if(this.fileList.length == 0){
+          this.$message.error('请上传图片');
+          return;
+        }
+        this.ruleForm.imgurl = this.imgurl
         service.addarticle(this.ruleForm).then((res) => {
           console.log(res);
           this.findcategory();
           this.$message({
             type: "success",
-            message:  res.data.msg
+            message: res.data.msg
           });
+          this.ruleForm.imgurl = '';
+          this.fileList = [];
           this.dialogFormVisible = false
         }).catch((err) => {
           this.$message.error('失败', err);
           console.log(err);
         })
       } else {//编辑文章
+        if(this.fileList.length == 0){
+          this.$message.error('请上传图片');
+          return;
+        }
+        this.ruleForm.imgurl = this.imgurl
         service.editarticle(qs.stringify(this.ruleForm)).then((res) => {
           console.log(res);
           this.findcategory();
@@ -120,6 +160,8 @@ export default {
             type: "success",
             message: res.data.msg
           });
+          this.ruleForm.imgurl = '';
+          this.fileList = [];
           this.dialogFormVisible = false
         }).catch((err) => {
           this.$message.error('失败', err);
@@ -163,8 +205,12 @@ export default {
       this.addEditTitle(handle);
     },
     handleEdit(index, row, handle) {
+      this.fileList = [];
       this.addEditTitle(handle);
       this.dialogFormVisible = true;
+      if(row.hasOwnProperty('imgurl')&&row.imgurl != ''){
+        this.fileList.push({name:'img',url:row.imgurl});
+      }
       this.ruleForm = row;
       console.log(index, row);
     },
@@ -232,16 +278,16 @@ export default {
         type: "warning"
       })
         .then(() => {
-            service.deletearticle(this.multipleSelection).then((res) => {
-              this.findcategory();
-              this.$message({
-                type: "success",
-                message:  res.data.msg
-              });
-            }).catch((err) => {
-              console.log(err);
-              this.$message.error('错误' + err)
-            })
+          service.deletearticle(this.multipleSelection).then((res) => {
+            this.findcategory();
+            this.$message({
+              type: "success",
+              message: res.data.msg
+            });
+          }).catch((err) => {
+            console.log(err);
+            this.$message.error('错误' + err)
+          })
         })
         .catch(() => {
           if (!batch) {
@@ -278,6 +324,7 @@ export default {
           this.loading = false;
           this.articles = datas;
           this.page.pagetotal = res.data.page.totalPage
+          
         }).catch((err) => {
           console.log(err);
           this.$message.error('失败', err);
@@ -292,7 +339,6 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.findcategory()
-
   },
   beforeCreate() { }, //生命周期 - 创建之前
   beforeMount() { }, //生命周期 - 挂载之前

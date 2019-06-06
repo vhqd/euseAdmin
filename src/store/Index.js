@@ -50,6 +50,17 @@ const store = new Vuex.Store({
         },
         getFirstCategory(state) {
             return state.firstCategory
+        },
+        getAllCate(state){
+            let allcate = state.allCategory
+            allcate = allcate.slice(1,allcate.length)
+            for(let i = 0 ; i < allcate.length ; i++){
+                let childdata = allcate[i].children;
+                handChild(childdata);
+                allcate[i].label = allcate[i].categoryname
+                allcate[i].value = allcate[i]._id
+            }
+            return allcate
         }
     },
 
@@ -57,5 +68,17 @@ const store = new Vuex.Store({
 
     }
 })
+
+function handChild(data){
+    for(let i = 0 ; i < data.length ; i++){
+        data[i].label = data[i].categoryname
+        data[i].value = data[i]._id
+        let child = data[i].children;
+        for(let j = 0 ; j < child.length ; j++ ){
+            child[j].label = child[j].categoryname
+            child[j].value = child[j]._id
+        }
+    }
+}
 
 export default store

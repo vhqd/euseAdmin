@@ -23,6 +23,11 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="creatat" label="日期" sortable width="180"></el-table-column>
       <el-table-column prop="title" label="文章标题" sortable width="180"></el-table-column>
+      <el-table-column prop="imgurl" label="缩略图" min-width="20%">
+        <template slot-scope="scope">
+          <img :src="scope.row.imgurl" min-width="70" height="70">
+        </template>
+      </el-table-column>
       <el-table-column prop="desc" label="文字描述"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -48,7 +53,7 @@
         <el-form-item label="文章名称" prop="title">
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="选择栏目" prop="parentId" v-if="!ruleForm.isparent">
+        <!-- <el-form-item label="选择栏目" prop="parentId" v-if="!ruleForm.isparent">
           <el-select v-if="secCate" v-model="ruleForm.parentId" placeholder="请选择栏目">
             <el-option
               :label="item.categoryname"
@@ -57,6 +62,33 @@
               :key="index"
             ></el-option>
           </el-select>
+        </el-form-item>-->
+        <el-form-item label="选择栏目" prop="parentId">
+          <el-cascader
+            v-model="value"
+            :options="allcate"
+            :props="{expandTrigger:'hover'}"
+            @change="handlecateID"
+          ></el-cascader>
+        </el-form-item>
+
+        <el-form-item label="选择图片">
+          <el-upload
+            multiple
+            class="upload-demo"
+            action="http://127.0.0.1:3000/api/upload/addPicture"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="handleSuccess"
+            :limit="1"
+            ref="upload"
+            name="img"
+            :file-list="fileList"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="文章简介" prop="desc">
           <el-input type="textarea" v-model="ruleForm.desc"></el-input>
