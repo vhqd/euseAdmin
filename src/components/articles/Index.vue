@@ -103,7 +103,7 @@
           ></quill-editor>
           <el-upload
             class="avatar-uploader"
-            :action="serverUrl"
+            action="http://127.0.0.1:3000/api/upload/addPicture"
             name="img"
             :headers="header"
             :show-file-list="false"

@@ -174,6 +174,8 @@ export default {
     uploadSuccess(res, file) {
       // res为图片服务器返回的数据
       // 获取富文本组件实例
+      console.log(5555555555555);
+      
       console.log(res);
       let quill = this.$refs.myQuillEditor.quill;
       // 如果上传成功
@@ -181,7 +183,7 @@ export default {
         // 获取光标所在位置
         let length = quill.getSelection().index;
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", res.url);
+        quill.insertEmbed(length, "image", 'http://127.0.0.1:3000/server/'+res.ret_code);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
