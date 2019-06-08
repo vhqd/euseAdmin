@@ -84,7 +84,7 @@
           </el-select>
         </el-form-item>-->
         <el-form-item label="父级栏目" prop="parentId">
-          <el-cascader :options="allCate" change-on-select clearable @change="handlecateID"></el-cascader>
+          <el-cascader :options="allCate" expandTrigger='hover' change-on-select clearable @change="handlecateID"></el-cascader>
         </el-form-item>
         <el-form-item label="栏目描述" prop="desc">
           <el-input type="textarea" v-model="ruleForm.desc"></el-input>
